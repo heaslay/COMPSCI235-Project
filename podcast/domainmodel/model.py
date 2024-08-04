@@ -367,7 +367,7 @@ class Episode:
     
     @length.setter
     def length(self, new_length: int):
-        validate_non_negative_int(length)
+        validate_non_negative_int(new_length)
         self._length = new_length
 
     @property
@@ -395,7 +395,7 @@ class Episode:
     def __eq__(self, other):
         if not isinstance(other, Episode):
             return False
-        return self.id == other.id and self.belong == other.belong
+        return self.id == other.id
     
     def __lt__(self, other):
         if not isinstance(other, Episode):
@@ -462,7 +462,7 @@ class Review:
     def __eq__(self, other):
         if not isinstance(other, Review):
             return False
-        return self.id == other.id and self.came == other.came and self.writer == other.writer
+        return self.id == other.id and self.writer == other.writer
     
     def __lt__(self, other):
         if not isinstance(other, Review):
@@ -470,7 +470,7 @@ class Review:
         return self.id < other.id
     
     def __hash__(self):
-        return hash((self.id, self.came, self.writer))
+        return hash((self.id, self.writer))
 
 
 class Playlist:
@@ -508,3 +508,16 @@ class Playlist:
 
     def __repr__(self) -> str:
         return f"<Playlist {self.id}: Owns by {self.owner.username}>"
+    
+    def __eq__(self, other):
+        if not isinstance(other, Playlist):
+            return False
+        return self.id == other.id
+    
+    def __lt__(self, other):
+        if not isinstance(other, Playlist):
+            return False
+        return self.id < other.id
+    
+    def __hash__(self):
+        return hash((self.id))
