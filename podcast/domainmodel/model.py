@@ -315,15 +315,196 @@ class PodcastSubscription:
 
 
 class Episode:
-    # TODO: Complete the implementation of the Episode class.
-    pass
+    def __init__(self, episode_id: int, belong: Podcast, title: str = "Untitled", audio: str = "", length: int = 0, description: str = "", date: str = ""):
+        validate_non_negative_int(episode_id)
+        validate_non_empty_string(title, "Episode title")
+        validate_non_negative_int(length)
+        if not isinstance(belong, Podcast):
+            raise TypeError("Podcast must be a Podcast object.")
+        self._id = episode_id
+        self._belong = belong
+        self._title = title.strip()
+        self._audio = audio
+        self._length = length
+        self._description = description
+        self._date = date
+
+    @property
+    def id(self) -> int:
+        return self._id
+    
+    @property
+    def belong(self) -> Podcast:
+        return self._belong
+    
+    @belong.setter
+    def belong(self, new_belong: Podcast):
+        if not isinstance(new_belong, Podcast):
+            raise TypeError("Podcast must be a Podcast object.")
+        self._belong = new_belong
+    
+    @property
+    def title(self) -> str:
+        return self._title
+    
+    @title.setter
+    def title(self, new_title: str):
+        validate_non_empty_string(new_title, "Episode title")
+        self._title = new_title.strip()
+
+    @property
+    def audio(self) -> str:
+        return self._audio
+    
+    @audio.setter
+    def audio(self, new_audio: str):
+        validate_non_empty_string(new_audio, "Episode audio")
+        self._audio = new_audio
+    
+    @property
+    def length(self) -> int:
+        return self._length
+    
+    @length.setter
+    def length(self, new_length: int):
+        validate_non_negative_int(length)
+        self._length = new_length
+
+    @property
+    def description(self) -> str:
+        return self._description
+    
+    @description.setter
+    def description(self, new_description: str):
+        if not isinstance(new_description, str):
+            validate_non_empty_string(new_description, "Episode's description")
+        self._description = new_description
+
+    @property
+    def date(self) -> str:
+        return self._date
+    
+    @date.setter
+    def date(self, new_date: str):
+        validate_non_empty_string(new_date, "Episode published date")
+        self._date = new_date
+
+    def __repr__(self) -> str:
+        return f"<Episode {self.id}: Belongs to {self.belong.title}>"
+    
+    def __eq__(self, other):
+        if not isinstance(other, Episode):
+            return False
+        return self.id == other.id and self.belong == other.belong
+    
+    def __lt__(self, other):
+        if not isinstance(other, Episode):
+            return False
+        return self.id < other.id
+    
+    def __hash__(self):
+        return hash((self.id, self.belong))
 
 
 class Review:
-    # TODO: Complete the implementation of the Review class.
-    pass
+    def __init__(self, review_id: int, came: Podcast or Episode, writer: User, rating: int, content: str = ""): # type: ignore
+        validate_non_negative_int(review_id)
+        validate_non_negative_int(rating)
+        if isinstance(came, Podcast):
+            if not isinstance(came, Podcast):
+                raise TypeError("Review must be from Podcast or Episode object.")
+        else:
+            if not isinstance(came, Episode):
+                raise TypeError("Review must be from Podcast or Episode object.")
+        self._id = review_id
+        self._came = came
+        self._writer = writer
+        self._rating = rating
+        self._content = content
+
+    @property
+    def id(self) -> int:
+        return self.id
+    
+    @property
+    def came(self) -> Podcast:
+        return self._came
+    
+    def came(self) -> Episode:
+        return self._came
+        
+    @property
+    def writer(self) -> User:
+        return self._writer
+    
+    @property
+    def rating(self) -> int:
+        return self._rating
+    
+    @rating.setter
+    def rating(self, new_rating: int):
+        validate_non_negative_int(new_rating)
+        self._rating = new_rating
+    
+    @property
+    def content(self) -> str:
+        return self._content
+    
+    @content.setter
+    def content(self, new_content: str):
+        if not isinstance(new_content, str):
+            validate_non_empty_string(new_content, "Review's content")
+        self._content = new_content
+
+    def __repr__(self) -> str:
+        return f"<Review {self.id}>: Wrote from {self.writer}>"
+    
+    def __eq__(self, other):
+        if not isinstance(other, Review):
+            return False
+        return self.id == other.id and self.came == other.came and self.writer == other.writer
+    
+    def __lt__(self, other):
+        if not isinstance(other, Review):
+            return False
+        return self.id < other.id
+    
+    def __hash__(self):
+        return hash((self.id, self.came, self.writer))
 
 
 class Playlist:
-    # TODO: Complete the implementation of the Playlist class.
-    pass
+    def __init__(self, playlist_id: int, owner: User, title: str = "Untitle"):
+        validate_non_negative_int(playlist_id)
+        validate_non_empty_string(title, "Playlist's title")
+        if not isinstance(owner, User):
+            raise TypeError("Owner must be a User object.")
+        self._id = playlist_id
+        self._owner = owner
+        self._title = title.strip()
+
+    @property
+    def id(self) -> int:
+        return self._id
+    
+    @property
+    def owner(self) -> User:
+        return self._owner
+    
+    @owner.setter
+    def owner(self, new_owner: User):
+        if not isinstance(new_owner, User):
+            raise TypeError("Owner must be a User object.")
+        self._owner = new_owner
+
+    @property
+    def title(self) -> str:
+        return self._title
+    
+    @title.setter
+    def title(self, new_title: str):
+        validate_non_empty_string(new_title, "Playlist's title")
+        self._title = new_title
+
+    def __repr__(self) -> str:
+        return f"<Playlist {self.id}: Owns by {self.owner.username}>"
