@@ -318,6 +318,7 @@ class Episode:
     def __init__(self, episode_id: int, belong: Podcast, title: str = "Untitled", audio: str = "", length: int = 0, description: str = "", date: str = ""):
         validate_non_negative_int(episode_id)
         validate_non_empty_string(title, "Episode title")
+        validate_non_empty_string(audio, "Episode audio")
         validate_non_negative_int(length)
         if not isinstance(belong, Podcast):
             raise TypeError("Podcast must be a Podcast object.")
@@ -407,15 +408,13 @@ class Episode:
 
 
 class Review:
-    def __init__(self, review_id: int, came: Podcast or Episode, writer: User, rating: int, content: str = ""): # type: ignore
+    def __init__(self, review_id: int, came: Podcast or Episode, writer: User, rating: int, content: str = ""):
         validate_non_negative_int(review_id)
         validate_non_negative_int(rating)
-        if isinstance(came, Podcast):
-            if not isinstance(came, Podcast):
-                raise TypeError("Review must be from Podcast or Episode object.")
-        else:
-            if not isinstance(came, Episode):
-                raise TypeError("Review must be from Podcast or Episode object.")
+        if not isinstance(came, (Podcast, Episode)):
+            raise TypeError("Review must be from Podcast or Episode object.")
+        if not isinstance(writer, User):
+            raise TypeError("Writer must be a User object.")
         self._id = review_id
         self._came = came
         self._writer = writer
@@ -424,13 +423,10 @@ class Review:
 
     @property
     def id(self) -> int:
-        return self.id
+        return self._id
     
     @property
-    def came(self) -> Podcast:
-        return self._came
-    
-    def came(self) -> Episode:
+    def came(self) -> Podcast or Episode: # type: ignore
         return self._came
         
     @property
@@ -452,12 +448,11 @@ class Review:
     
     @content.setter
     def content(self, new_content: str):
-        if not isinstance(new_content, str):
-            validate_non_empty_string(new_content, "Review's content")
+        validate_non_empty_string(new_content, "Review's content")
         self._content = new_content
 
     def __repr__(self) -> str:
-        return f"<Review {self.id}>: Wrote from {self.writer}>"
+        return f"<Review {self.id}>: Wrote from {self.writer.username}>"
     
     def __eq__(self, other):
         if not isinstance(other, Review):

@@ -1,5 +1,5 @@
 import pytest
-from podcast.domainmodel.model import Author, Podcast, Category, User, PodcastSubscription
+from podcast.domainmodel.model import Author, Podcast, Category, User, PodcastSubscription, Episode, Review, Playlist
 from podcast.adapters.datareader.csvdatareader import CSVDataReader
 
 
@@ -349,3 +349,121 @@ def test_podcast_subscription_hash(my_user, my_podcast):
     assert len(sub_set) == 1
 
 # TODO : Write Unit Tests for CSVDataReader, Episode, Review, Playlist classes
+# Tests for Episode class
+def test_episode_initialization(my_podcast):
+    episode = Episode(1, my_podcast, "Episode 1", "audio.mp3", 300, "Description", "2024-08-05")
+    assert episode.id == 1
+    assert episode.belong == my_podcast
+    assert episode.title == "Episode 1"
+    assert episode.audio == "audio.mp3"
+    assert episode.length == 300
+    assert episode.description == "Description"
+    assert episode.date == "2024-08-05"
+    assert repr(episode) == "<Episode 1: Belongs to Joe Toste Podcast - Sales Training Expert>"
+
+    with pytest.raises(ValueError):
+        Episode(2, my_podcast, "", "audio.mp3", 300, "Description", "2024-08-05")
+
+    with pytest.raises(ValueError):
+        Episode(2, my_podcast, "Episode 2", "", 300, "Description", "2024-08-05")
+
+
+def test_episode_setters(my_podcast):
+    episode = Episode(1, my_podcast, "Episode 1", "audio.mp3", 300, "Description", "2024-08-05")
+    episode.title = "New Title"
+    assert episode.title == "New Title"
+
+    episode.audio = "new_audio.mp3"
+    assert episode.audio == "new_audio.mp3"
+
+    episode.length = 350
+    assert episode.length == 350
+
+    episode.description = "New Description"
+    assert episode.description == "New Description"
+
+    episode.date = "2024-08-06"
+    assert episode.date == "2024-08-06"
+
+    with pytest.raises(ValueError):
+        episode.title = ""
+
+    with pytest.raises(ValueError):
+        episode.audio = ""
+
+    with pytest.raises(ValueError):
+        episode.date = ""
+
+
+def test_review_initialization(my_podcast, my_user):
+    review = Review(1, my_podcast, my_user, 5, "Great episode!")
+    assert review.id == 1
+    assert review.came == my_podcast
+    assert review.writer == my_user
+    assert review.rating == 5
+    assert review.content == "Great episode!"
+    assert repr(review) == "<Review 1>: Wrote from shyamli>"
+
+    with pytest.raises(ValueError):
+        Review(2, my_podcast, my_user, -1)
+
+    with pytest.raises(TypeError):
+        Review(2, "not a podcast", my_user, 5)
+
+    with pytest.raises(TypeError):
+        Review(2, my_podcast, "not a user", 5)
+
+
+def test_review_setters(my_podcast, my_user):
+    review = Review(1, my_podcast, my_user, 5, "Great episode!")
+    review.rating = 4
+    assert review.rating == 4
+
+    review.content = "Good episode"
+    assert review.content == "Good episode"
+
+    with pytest.raises(ValueError):
+        review.rating = -1
+
+    with pytest.raises(ValueError):
+        review.content = ""
+
+
+def test_playlist_initialization(my_user):
+    playlist = Playlist(1, my_user, "My Playlist")
+    assert playlist.id == 1
+    assert playlist.owner == my_user
+    assert playlist.title == "My Playlist"
+    assert repr(playlist) == "<Playlist 1: Owns by shyamli>"
+
+    with pytest.raises(ValueError):
+        Playlist(2, my_user, "")
+
+    with pytest.raises(ValueError):
+        Playlist(2, my_user, 123)
+
+
+def test_playlist_setters(my_user):
+    playlist = Playlist(1, my_user, "My Playlist")
+    playlist.title = "New Playlist"
+    assert playlist.title == "New Playlist"
+
+    new_user = User(2, "asma", "pw67890")
+    playlist.owner = new_user
+    assert playlist.owner == new_user
+
+    with pytest.raises(ValueError):
+        playlist.title = ""
+
+    with pytest.raises(TypeError):
+        playlist.owner = "not a user"
+
+
+# Test CSVDataReader - not implemented yet, comment out first
+#def test_csv_data_reader():
+    #reader = CSVDataReader('data.csv')
+    #assert reader.filename == 'data.csv'
+
+    #reader.read_csv_data()
+    #assert len(reader.dataset_of_authors) > 0
+    #assert len(reader.dataset_of_podcasts) > 0
