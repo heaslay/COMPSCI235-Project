@@ -467,3 +467,20 @@ def test_playlist_setters(my_user):
     #reader.read_csv_data()
     #assert len(reader.dataset_of_authors) > 0
     #assert len(reader.dataset_of_podcasts) > 0
+
+def test_csv_data_reader():
+    podcasts_path = 'podcast/adapters/data/podcasts.csv'
+    episodes_path = 'podcast/adapters/data/episodes.csv'
+    reader = CSVDataReader(podcasts_path, episodes_path)
+    assert reader.podcasts_filename == podcasts_path
+    assert reader.episodes_filename == episodes_path
+
+    reader.read_csv_data()
+    assert len(reader.dataset_of_authors) > 0
+    assert len(reader.podcasts) > 0
+    assert len(reader.episodes) > 0
+    # print(reader.podcasts)
+    # print(reader.episodes)
+    # print(len(reader.podcasts))
+    # print(len(reader.episodes))
+
