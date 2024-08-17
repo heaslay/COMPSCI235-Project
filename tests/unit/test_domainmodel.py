@@ -458,16 +458,6 @@ def test_playlist_setters(my_user):
     with pytest.raises(TypeError):
         playlist.owner = "not a user"
 
-
-# Test CSVDataReader - not implemented yet, comment out first
-#def test_csv_data_reader():
-    #reader = CSVDataReader('data.csv')
-    #assert reader.filename == 'data.csv'
-
-    #reader.read_csv_data()
-    #assert len(reader.dataset_of_authors) > 0
-    #assert len(reader.dataset_of_podcasts) > 0
-
 def test_csv_data_reader():
     podcasts_path = 'podcast/adapters/data/podcasts.csv'
     episodes_path = 'podcast/adapters/data/episodes.csv'
@@ -479,8 +469,38 @@ def test_csv_data_reader():
     assert len(reader.dataset_of_authors) > 0
     assert len(reader.podcasts) > 0
     assert len(reader.episodes) > 0
+
+    author_names = [author.name for author in reader.dataset_of_authors]
+    assert len(author_names) == len(set(author_names)), "Duplicate authors found."
+
+    for podcast in reader.podcasts:
+        categories = [cat.name for cat in podcast.categories]
+        assert len(categories) == len(set(categories)), f"Duplicate categories found in podcast {podcast.title}"
+
+    # Validate the first podcast
+    podcast = reader.podcasts[0]
+    assert isinstance(podcast, Podcast), "First item in podcasts is not a Podcast object."
+    assert isinstance(podcast.author, Author), "Podcast author is not an Author object."
+    assert len(podcast.categories) > 0, "Podcast has no categories."
+
+    # Validate the first episode
+    episode = reader.episodes[0]
+    assert isinstance(episode, Episode), "First item in episodes is not an Episode object."
+    assert isinstance(episode.belong, Podcast), "Episode's podcast is not a Podcast object."
+    assert episode.belong in reader.podcasts, "Episode's podcast is not in the podcasts list."
+
+    # Test empty strings for author and audio link are handled
+    assert episode.title != "", "Episode title should not be empty."
+    assert episode.audio != "N/A", "Audio link should be correctly set."
+
+    # Test error handling
+    # Test that the method raises a FileNotFoundError if the file does not exist
+    with pytest.raises(FileNotFoundError):
+        invalid_reader = CSVDataReader('invalid_path/podcasts.csv', 'invalid_path/episodes.csv')
+        invalid_reader.read_csv_data()
+
+    # I assume these are debug statements, I will leave them here for now - Isaac.
     # print(reader.podcasts)
     # print(reader.episodes)
     # print(len(reader.podcasts))
     # print(len(reader.episodes))
-
