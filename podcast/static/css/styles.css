@@ -208,3 +208,14 @@ hr {
   width: 100px;
   height: 100px;
 }
+
+.intro {
+  margin: 0 auto;
+  max-width: 800px;
+}
+
+.intro h2,
+.intro p {
+  font-weight: normal;
+  text-align: justify;
+}
