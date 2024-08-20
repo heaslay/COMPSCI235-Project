@@ -1,20 +1,13 @@
+{% extends 'layout.html' %}
 <!DOCTYPE html>
 <html>
   <head>
     <title>Podcast Catalogue</title>
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/styles.css') }}"
-    />
   </head>
 
   <body>
-    {% include 'navbar.html' %}
-    <div class="content">
-      <div class="heading">Podcast Catalogue</div>
-      <p>&copy ilin908 | pche238 | wzha899</p>
-      <hr />
-      <div class="catalogue-container">
+    {% block web %}Catalogue{% endblock %}
+    {% block cataContent %}
         <h2>Available Podcasts</h2>
         <ul class="podcast-list">
           {% for podcast in podcasts %}
@@ -28,10 +21,10 @@
           </li>
           {% endfor %}
         </ul>
-      </div>
+    {% endblock %}
 
       <!-- Pagination Controls -->
-      <div class="pagination">
+      {% block catapagnt %}
         {% if current_page > 1 %}
         <a href="{{ url_for('podcasts_bp.home', page=1) }}">First</a>
         <a href="{{ url_for('podcasts_bp.home', page=current_page - 1) }}"
@@ -62,6 +55,7 @@
           <button type="submit">Go</button>
         </form>
       </div>
+      {% endblock %}
     </div>
   </body>
 </html>

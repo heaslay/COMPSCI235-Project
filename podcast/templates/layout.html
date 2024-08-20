@@ -1,27 +1,31 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>CS235 Podcast Library</title>
     <link
       rel="stylesheet"
-      href="{{ url_for('static', filename='css/styles.css') }}"
+      href="{{ url_for('static', filename='css/main.css') }}"
     />
   </head>
 
   <body>
     {% include 'navbar.html' %}
     <div class="content">
-      <div class="heading">CS235 Podcast Library</div>
-      <p>&copy ilin908 | pche238 | wzha899</p>
-      <hr />
+      <header>
+        <div class="heading">CS235 Podcast {% block web %}{% endblock %}</div>
+         {% include 'copyright.html' %}
+      </header>
+      
       <div class="intro">
-      <p>
-        Welcome to Pod Library! Your gateway to a world of podcasts! Discover, explore, and enjoy a vast
-        collection of podcasts across all genres. Whether you're into deep
-        discussions, casual chats, or inspiring stories, our platform connects
-        you with the best audio content from around the globe.
+        {% block content %}{% endblock %}      
       </div>
-      </p>
-    </div>
+
+      <div class="catalogue-container">
+        {% block cataContent %}{% endblock %}
+      </div>
+
+      <div class="pagination">
+        {% block catapagnt %}{% endblock %}
+      </div>
+
   </body>
 </html>

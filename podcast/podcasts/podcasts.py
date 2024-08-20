@@ -29,7 +29,7 @@ def home():
     podcasts_on_page = all_podcasts[start_index:end_index]
 
     return render_template(
-        'catalogue.html', 
+        'catalogue/catalogue.html', 
         podcasts=podcasts_on_page, 
         current_page=current_page, 
         total_pages=total_pages
@@ -58,7 +58,7 @@ def show_description(podcast_id):
 
     # Pass the podcast, displayed episodes, related podcasts, and pagination data to the template
     return render_template(
-        'podcastDescription.html',
+        'description/podcastDescription.html',
         podcast=podcast,
         episodes=displayed_episodes,
         related_podcasts=related_podcasts,
