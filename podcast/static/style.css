@@ -3,6 +3,9 @@ body {
     margin: 0;
     padding: 0;
     background-color: #f4f4f4;
+    transform: scale(0.8);  /* 将整体页面缩小到80% */
+    transform-origin: top left; /* 缩放时从左上角开始 */
+    width: 125%;  /* 由于缩放，增加宽度以占满页面 */
 }
 
 .container {

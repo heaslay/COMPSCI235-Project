@@ -94,7 +94,7 @@ class MemoryPodcastRepository(AbstractPodcastRepository):
                 if not set(current_podcast.categories).isdisjoint(podcast.categories):
                     related_podcasts.append(podcast)
 
-        return related_podcasts[:4]
+        return related_podcasts
 
 
 

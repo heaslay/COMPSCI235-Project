@@ -3,7 +3,6 @@ import random
 from podcast.adapters.datareader.csvdatareader import CSVDataReader
 from podcast.adapters.interface_repository import MemoryPodcastRepository
 
-
 podcast_bp = Blueprint('podcast_bp', __name__)
 csv_reader = CSVDataReader('podcasts.csv', 'episodes.csv')
 repository = MemoryPodcastRepository(csv_reader)
@@ -11,25 +10,24 @@ repository = MemoryPodcastRepository(csv_reader)
 
 @podcast_bp.route('/podcast/<int:podcast_id>', methods=['GET', 'POST'])
 def podcast_details(podcast_id):
-
     podcast = repository.get_podcast_by_id(podcast_id)
     if podcast is None:
         return "Podcast not found", 404
-
-    print(f"Requested Podcast ID: {podcast_id}", flush=True)
-    print(f"Podcast found: {podcast is not None}", flush=True)
-
 
     total_pages = (len(podcast.episodes) + 5) // 6
     current_page = int(request.args.get('page', 1))
 
     related_podcasts = repository.get_related_podcasts_by_id(podcast_id)
-    if request.method == 'POST':
+    if len(related_podcasts) > 4:
+        related_podcasts = random.sample(related_podcasts, 4)
+    else:
         random.shuffle(related_podcasts)
-    related_podcasts = related_podcasts[:4]
 
-    return render_template('podcastDescription.html', podcast=podcast, current_page=current_page, total_pages=total_pages, related_podcasts=related_podcasts)
-
+    return render_template('podcastDescription.html',
+                           podcast=podcast,
+                           current_page=current_page,
+                           total_pages=total_pages,
+                           related_podcasts=related_podcasts)
 
 @podcast_bp.route('/change_batch/<int:podcast_id>', methods=['POST'])
 def change_batch(podcast_id):
