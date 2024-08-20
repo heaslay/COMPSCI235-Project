@@ -1,86 +1,103 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Podcast Details</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-</head>
-<body>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/styles.css') }}"
+    />
+  </head>
+  <body>
+    {% include 'navbar.html' %}
     <div class="container">
-        <!-- Podcast Introduction Section -->
-        <div class="section header">
-            <div class="podcast-image">
-                <img src="{{ podcast._image }}" alt="Podcast Image" />
+      <!-- Podcast Introduction Section -->
+      <div class="section header">
+        <div class="podcast-image">
+          <img src="{{ podcast._image }}" alt="Podcast Image" />
+        </div>
+        <div class="podcast-details">
+          <h1>{{ podcast.name }}</h1>
+          <p>{{ podcast.author }} | {{ podcast.category }}</p>
+          <p>
+            Episodes: {{ podcast.episode_count }} | Language: {{
+            podcast.language }}
+          </p>
+          <p>Description: {{ podcast.description }}</p>
+        </div>
+      </div>
+
+      <!-- Content Section -->
+      <div class="section content">
+        <!-- Episode Selection Section -->
+        <div class="episode-list">
+          {% for episode in podcast.episodes[(current_page-1)*5:current_page*5]
+          %}
+          <div class="episode-item" onclick="playEpisode({{ episode.id }})">
+            <div class="episode-title">
+              <span>{{ episode._title }}</span>
+              <small class="episode-meta"
+                >Length: {{ episode._length }} | Date: {{ episode._date
+                }}</small
+              >
             </div>
-            <div class="podcast-details">
-                <h1>{{ podcast.name }}</h1>
-                <p>{{ podcast.author }} | {{ podcast.category }}</p>
-                <p>Episodes: {{ podcast.episode_count }} | Language: {{ podcast.language }}</p>
-                <p>Description: {{ podcast.description }}</p>
-            </div>
+            <div class="episode-description">{{ episode._description }}</div>
+          </div>
+          {% endfor %}
+
+          <!-- Pagination Controls -->
+          <div class="pagination">
+            {% if current_page > 1 %}
+            <a href="?page=1">First Page</a>
+            <a href="?page={{ current_page - 1 }}">Previous Page</a>
+            {% else %}
+            <span class="disabled">First Page</span>
+            <span class="disabled">Previous Page</span>
+            {% endif %} {% if current_page < total_pages %}
+            <a href="?page={{ current_page + 1 }}">Next Page</a>
+            <a href="?page={{ total_pages }}">Last Page</a>
+            {% else %}
+            <span class="disabled">Next Page</span>
+            <span class="disabled">Last Page</span>
+            {% endif %}
+
+            <span
+              >Jump to
+              <input
+                type="number"
+                value="{{ current_page }}"
+                min="1"
+                max="{{ total_pages }}"
+                onchange="window.location.href='?page=' + this.value"
+            /></span>
+          </div>
         </div>
 
-        <!-- Content Section -->
-        <div class="section content">
-            <!-- Episode Selection Section -->
-            <div class="episode-list">
-                {% for episode in podcast.episodes[(current_page-1)*5:current_page*5] %}
-                <div class="episode-item" ondblclick="playEpisode({{ episode.id }})">
-                    <div class="episode-title">
-                        <span>{{ episode._title }}</span>
-                        <small class="episode-meta">Length: {{ episode._length }} | Date: {{ episode._date }}</small>
-                    </div>
-                    <div class="episode-description">
-                        {{ episode._description }}
-                    </div>
-                </div>
-                {% endfor %}
-
-                <!-- Pagination Controls -->
-                <div class="pagination">
-                    {% if current_page > 1 %}
-                    <a href="?page=1">First Page</a>
-                    <a href="?page={{ current_page - 1 }}">Previous Page</a>
-                    {% else %}
-                    <span class="disabled">First Page</span>
-                    <span class="disabled">Previous Page</span>
-                    {% endif %}
-
-                    {% if current_page < total_pages %}
-                    <a href="?page={{ current_page + 1 }}">Next Page</a>
-                    <a href="?page={{ total_pages }}">Last Page</a>
-                    {% else %}
-                    <span class="disabled">Next Page</span>
-                    <span class="disabled">Last Page</span>
-                    {% endif %}
-
-                    <span>Jump to <input type="number" value="{{ current_page }}" min="1" max="{{ total_pages }}" onchange="window.location.href='?page=' + this.value"></span>
-                </div>
-            </div>
-
-            <!-- Related Podcasts Section -->
-            <div class="related-podcasts">
-                <div class="related-item-container">
-                    {% for related in related_podcasts %}
-                    <a href="/podcast/{{ related.id }}" class="related-item">
-                        <img src="{{ related._image }}" alt="Related Podcast Image" />
-                        <div>{{ related.name }}</div>
-                    </a>
-                    {% endfor %}
-                </div>
-                <div class="change-batch">
-                    <form method="post" action="{{ url_for('podcast_bp.change_batch', podcast_id=podcast.id) }}">
-                        <button type="submit">Change Batch</button>
-                    </form>
-                </div>
-            </div>
+        <!-- Related Podcasts Section -->
+        <div class="related-podcasts">
+          <div class="related-item-container">
+            {% for related in related_podcasts %}
+            <a href="/podcast/{{ related.id }}" class="related-item">
+              <img src="{{ related._image }}" alt="Related Podcast Image" />
+              <div>{{ related.name }}</div>
+            </a>
+            {% endfor %}
+          </div>
+          <div class="change-batch">
+            <form
+              method="post"
+              action="{{ url_for('podcasts_bp.change_batch', podcast_id=podcast.id) }}"
+            >
+              <button type="submit">Change Batch</button>
+            </form>
+          </div>
         </div>
+      </div>
     </div>
 
     <script>
-        function playEpisode(episodeNumber) {}
-
+      function playEpisode(episodeNumber) {}
     </script>
-</body>
+  </body>
 </html>
