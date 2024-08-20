@@ -7,6 +7,10 @@ from podcast.adapters.datareader.csvdatareader import CSVDataReader
 class AbstractPodcastRepository(ABC):
 
     @abstractmethod
+    def get_related_podcasts_by_id(self, podcast_id: int) -> List[Podcast]:
+        pass
+
+    @abstractmethod
     def get_podcast_by_id(self, podcast_id: int) -> Optional[Podcast]:
         pass
 
@@ -78,6 +82,21 @@ class MemoryPodcastRepository(AbstractPodcastRepository):
         self._episodes = csvdatareader.episodes
         self._authors = csvdatareader.dataset_of_authors
         self._categories = csvdatareader.dataset_of_categories
+
+    def get_related_podcasts_by_id(self, podcast_id: int) -> List[Podcast]:
+        current_podcast = self.get_podcast_by_id(podcast_id)
+        if not current_podcast:
+            return []
+
+        related_podcasts = []
+        for podcast in self._podcasts:
+            if podcast.id != podcast_id:
+                if not set(current_podcast.categories).isdisjoint(podcast.categories):
+                    related_podcasts.append(podcast)
+
+        return related_podcasts[:4]
+
+
 
     def get_podcast_by_id(self, podcast_id: int) -> Optional[Podcast]:
         for podcast in self._podcasts:

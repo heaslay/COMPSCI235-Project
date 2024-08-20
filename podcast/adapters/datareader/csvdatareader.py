@@ -22,10 +22,10 @@ class CSVDataReader:
         self.read_podcasts()
         self.read_episodes()
 
-    def get_absolute_path(self, relative_path):
+    def get_absolute_path(self, CsvName):
         script_dir = os.path.dirname(__file__)
         project_root = os.path.abspath(os.path.join(script_dir, '..', 'data'))
-        absolute_path = os.path.join(project_root, relative_path)
+        absolute_path = os.path.join(project_root, CsvName)
         return absolute_path
 
     def read_podcasts(self):  # read all the podcast data and create object
