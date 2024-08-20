@@ -8,16 +8,26 @@ podcast_bp = Blueprint('podcast_bp', __name__)
 csv_reader = CSVDataReader('podcasts.csv', 'episodes.csv')
 repository = MemoryPodcastRepository(csv_reader)
 
+
 @podcast_bp.route('/podcast/<int:podcast_id>', methods=['GET', 'POST'])
-def podcast_details(podcast_id):                               # 随机选择4类似podacst
+def podcast_details(podcast_id):
+
     podcast = repository.get_podcast_by_id(podcast_id)
+    if podcast is None:
+        return "Podcast not found", 404
+
+    print(f"Requested Podcast ID: {podcast_id}", flush=True)
+    print(f"Podcast found: {podcast is not None}", flush=True)
+
+
     total_pages = (len(podcast.episodes) + 5) // 6
     current_page = int(request.args.get('page', 1))
-    #
+
     related_podcasts = repository.get_related_podcasts_by_id(podcast_id)
     if request.method == 'POST':
         random.shuffle(related_podcasts)
     related_podcasts = related_podcasts[:4]
+
     return render_template('podcastDescription.html', podcast=podcast, current_page=current_page, total_pages=total_pages, related_podcasts=related_podcasts)
 
 
@@ -29,4 +39,6 @@ def change_batch(podcast_id):
 @podcast_bp.route('/episode/<int:episode_id>')
 def play_episode(episode_id):
     episode = repository.get_episode_by_id(episode_id)
+    if episode is None:
+        return "Episode not found", 404
     return render_template('episode.html', episode=episode)

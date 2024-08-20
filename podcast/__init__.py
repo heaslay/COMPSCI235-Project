@@ -1,6 +1,7 @@
 """Initialize Flask app."""
 
 from flask import Flask, render_template
+from podcast.PodcastDetails_routes import podcast_bp
 
 # TODO: Access to the podcast should be implemented via the repository pattern and using blueprints, so this can not
 #  stay here!
@@ -22,6 +23,7 @@ def create_app():
 
     # Create the Flask app object.
     app = Flask(__name__)
+    app.register_blueprint(podcast_bp)
 
     @app.route('/')
     def home():
