@@ -155,15 +155,22 @@ class Podcast:
         if episode in self.episodes:
             self.episodes.remove(episode)
 
+    @property
+    def episode_count(self) -> int:
+        count = 0
+        for episode in self.episodes:
+            count += 1
+        return count
+
     def __repr__(self):
         return f"<Podcast {self.id}: '{self.title}' by {self.author.name}>"
 
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool:
         if not isinstance(other, Podcast):
             return False
         return self.id == other.id
 
-    def __lt__(self, other):
+    def __lt__(self, other) -> bool:
         if not isinstance(other, Podcast):
             return False
         return self.title < other.title
@@ -195,12 +202,12 @@ class Category:
     def __repr__(self) -> str:
         return f"<Category {self._id}: {self._name}>"
 
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool:
         if not isinstance(other, Category):
             return False
         return self.id == other.id
 
-    def __lt__(self, other):
+    def __lt__(self, other) -> bool:
         if not isinstance(other, Category):
             return False
         return self._name < other.name
@@ -248,12 +255,12 @@ class User:
     def __repr__(self):
         return f"<User {self.id}: {self.username}>"
 
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool:
         if not isinstance(other, User):
             return False
         return self.id == other.id
 
-    def __lt__(self, other):
+    def __lt__(self, other) -> bool:
         if not isinstance(other, User):
             return False
         return self.id < other.id
@@ -300,12 +307,12 @@ class PodcastSubscription:
     def __repr__(self):
         return f"<PodcastSubscription {self.id}: Owned by {self.owner.username}>"
 
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool:
         if not isinstance(other, PodcastSubscription):
             return False
         return self.id == other.id and self.owner == other.owner and self.podcast == other.podcast
 
-    def __lt__(self, other):
+    def __lt__(self, other) -> bool:
         if not isinstance(other, PodcastSubscription):
             return False
         return self.id < other.id
@@ -393,12 +400,12 @@ class Episode:
     def __repr__(self) -> str:
         return f"<Episode {self.id}: Belongs to {self.belong.title}>"
     
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool:
         if not isinstance(other, Episode):
             return False
         return self.id == other.id
     
-    def __lt__(self, other):
+    def __lt__(self, other) -> bool:
         if not isinstance(other, Episode):
             return False
         return self.id < other.id
@@ -454,12 +461,12 @@ class Review:
     def __repr__(self) -> str:
         return f"<Review {self.id}>: Wrote from {self.writer.username}>"
     
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool:
         if not isinstance(other, Review):
             return False
         return self.id == other.id and self.writer == other.writer
     
-    def __lt__(self, other):
+    def __lt__(self, other) -> bool:
         if not isinstance(other, Review):
             return False
         return self.id < other.id
@@ -504,12 +511,12 @@ class Playlist:
     def __repr__(self) -> str:
         return f"<Playlist {self.id}: Owns by {self.owner.username}>"
     
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool:
         if not isinstance(other, Playlist):
             return False
         return self.id == other.id
     
-    def __lt__(self, other):
+    def __lt__(self, other) -> bool:
         if not isinstance(other, Playlist):
             return False
         return self.id < other.id

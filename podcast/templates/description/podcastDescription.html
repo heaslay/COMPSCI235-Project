@@ -18,9 +18,9 @@
     <div class="details-body">
         <div class="details-container">
         <!-- Podcast Introduction Section -->
-         <header>
+         
             <div class="section-header">
-                <div class="podcast-image">
+                <div class="details-podcast-image">
                     <img src="{{ podcast._image }}" alt="Podcast Image" />
                 </div>
                 <div class="details-podcast-details">
@@ -33,7 +33,7 @@
                     <p>Description: {{ podcast.description }}</p>
                 </div>
             </div>
-        </header>   
+          
 
         <!-- Content Section -->
         <div class="section-content">
@@ -76,8 +76,8 @@
                     max="{{ total_pages }}"
                     onchange="window.location.href='?page=' + this.value"
                 /></span>
-            </div>
-            </div>
+            </div><!-- episode pagnigation -->
+            </div><!-- episode list -->
 
             <!-- Related Podcasts Section -->
             <div class="related-podcasts">
@@ -97,10 +97,10 @@
                 <button type="submit">Change Batch</button>
                 </form>
             </div>
-            </div>
-        </div>
-        </div>
-    </div>
+            </div><!-- relate podcast -->
+        </div><!-- section content -->
+        </div><!-- details container -->
+    </div> <!-- details body -->
     <script>
       function playEpisode(episodeNumber) { }
     </script>

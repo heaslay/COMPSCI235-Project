@@ -45,7 +45,11 @@ def show_description(podcast_id):
 
     # Retrieve related podcasts (modify this logic based on your actual implementation)
     related_podcasts = repository.get_related_podcasts_by_id(podcast_id)
-
+    if len(related_podcasts) > 4:
+        related_podcasts = random.sample(related_podcasts, 4)
+    else:
+        random.shuffle(related_podcasts)
+        
     # Determine current page and total pages for pagination (example logic)
     episodes_per_page = 5
     total_pages = (len(podcast.episodes) + episodes_per_page - 1) // episodes_per_page
