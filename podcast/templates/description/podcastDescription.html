@@ -11,6 +11,10 @@
   </head>
   <body>
     {% include 'navbar.html' %}
+    <header id="header">
+        {{ podcast.name }}
+        {% include 'copyright.html' %}
+    </header>
     <div class="details-body">
         <div class="details-container">
         <!-- Podcast Introduction Section -->

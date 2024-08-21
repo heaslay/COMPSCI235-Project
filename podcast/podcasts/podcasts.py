@@ -29,7 +29,7 @@ def home():
     podcasts_on_page = all_podcasts[start_index:end_index]
 
     return render_template(
-        'catalogue/catalogue.html', 
+        'podcastLibrary/library.html', 
         podcasts=podcasts_on_page, 
         current_page=current_page, 
         total_pages=total_pages

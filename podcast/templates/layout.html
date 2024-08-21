@@ -1,30 +1,27 @@
 <!DOCTYPE html>
-<html>
+<html> 
   <head>
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/main.css') }}"
-    />
+    {% block head %} {% endblock %}
   </head>
 
   <body>
     {% include 'navbar.html' %}
+    <header id="header">
+      {% block web %}{% endblock %}
+      {% include 'copyright.html' %}
+  </header>
     <div class="content">
-      <header>
-        <div class="heading">CS235 Podcast {% block web %}{% endblock %}</div>
-         {% include 'copyright.html' %}
-      </header>
       
       <div class="intro">
         {% block content %}{% endblock %}      
       </div>
 
-      <div class="catalogue-container">
-        {% block cataContent %}{% endblock %}
+      <div class="library-container">
+        {% block libContent %}{% endblock %}
       </div>
 
       <div class="pagination">
-        {% block catapagnt %}{% endblock %}
+        {% block libpagination %}{% endblock %}
       </div>
 
   </body>

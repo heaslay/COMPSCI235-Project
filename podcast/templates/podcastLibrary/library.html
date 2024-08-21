@@ -1,13 +1,17 @@
 {% extends 'layout.html' %}
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Podcast Catalogue</title>
-  </head>
+  {% block head %}
+    <title>Podcast Library</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/main.css') }}"
+    />
+  {% endblock %}
 
   <body>
-    {% block web %}Catalogue{% endblock %}
-    {% block cataContent %}
+    {% block web %}Podcast Library{% endblock %}
+    {% block libContent %}
         <h2>Available Podcasts</h2>
         <ul class="podcast-list">
           {% for podcast in podcasts %}
@@ -24,7 +28,7 @@
     {% endblock %}
 
       <!-- Pagination Controls -->
-      {% block catapagnt %}
+      {% block libpagination %}
         {% if current_page > 1 %}
         <a href="{{ url_for('podcasts_bp.home', page=1) }}">First</a>
         <a href="{{ url_for('podcasts_bp.home', page=current_page - 1) }}"
@@ -53,9 +57,8 @@
             value="{{ current_page }}"
           />
           <button type="submit">Go</button>
-        </form>
-      </div>
+        </form>      
       {% endblock %}
-    </div>
+    
   </body>
 </html>

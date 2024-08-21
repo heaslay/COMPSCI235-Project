@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Podcast Catalogue</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/styles.css') }}"
+    />
+  </head>
+
+  <body>
+    {% include 'navbar.html' %}
+    <div class="content">
+      <div class="heading">Podcast Catalogue</div>
+      <p>&copy ilin908 | pche238 | wzha899</p>
+      <hr />
+      <div class="library-container">
+        <h2>Available Podcasts</h2>
+        <ul class="podcast-list">
+          {% for podcast in podcasts %}
+          <li>
+            <a
+              href="{{ url_for('podcasts_bp.show_description', podcast_id=podcast.id) }}"
+            >
+              <img src="{{ podcast.image }}" alt="Podcast Logo" />
+              <span>{{ podcast.title }}</span>
+            </a>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+
+      <!-- Pagination Controls -->
+      <div class="pagination">
+        {% if current_page > 1 %}
+        <a href="{{ url_for('podcasts_bp.home', page=1) }}">First</a>
+        <a href="{{ url_for('podcasts_bp.home', page=current_page - 1) }}"
+          >Previous</a
+        >
+        {% endif %}
+
+        <span>Page {{ current_page }} of {{ total_pages }}</span>
+
+        {% if current_page < total_pages %}
+        <a href="{{ url_for('podcasts_bp.home', page=current_page + 1) }}"
+          >Next</a
+        >
+        <a href="{{ url_for('podcasts_bp.home', page=total_pages) }}">Last</a>
+        {% endif %}
+
+        <!-- Jump to Page Form -->
+        <form action="{{ url_for('podcasts_bp.home') }}" method="get">
+          <label for="page">Jump to page:</label>
+          <input
+            type="number"
+            id="page"
+            name="page"
+            min="1"
+            max="{{ total_pages }}"
+            value="{{ current_page }}"
+          />
+          <button type="submit">Go</button>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

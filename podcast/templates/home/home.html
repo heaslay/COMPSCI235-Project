@@ -1,14 +1,18 @@
 {% extends 'layout.html' %}
 <!DOCTYPE html>
 <html>
-  <head>
-    <title>Podcast Library</title>
-  </head>
+  {% block head %}
+    <title>Podcast Home</title>
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/main.css') }}"
+    />
+  {% endblock %}
 
   <body>
-    {% block web %}Library{% endblock %}
+    {% block web %}Podcast Home{% endblock %}
       {% block content %}
-      <p>
+      <p> <br>
         Welcome to Pod Library! Your gateway to a world of podcasts! Discover, explore, and enjoy a vast
         collection of podcasts across all genres. Whether you're into deep
         discussions, casual chats, or inspiring stories, our platform connects
