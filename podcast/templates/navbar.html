@@ -1,6 +1,10 @@
 <nav>
   <div>
     <div class="heading">Pod Library</div>
+    <div class="search-container">
+      <input class="search-input" type="text" placeholder="Search Podcast...">
+      <button class="search-button">OK</button>
+    </div>
     <a href="{{ url_for('home_bp.home') }}">Home</a>
     <a href="{{ url_for('podcasts_bp.home') }}">Podcasts</a>
   </div>
