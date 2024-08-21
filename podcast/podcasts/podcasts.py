@@ -45,8 +45,8 @@ def show_description(podcast_id):
 
     # Retrieve related podcasts (modify this logic based on your actual implementation)
     related_podcasts = repository.get_related_podcasts_by_id(podcast_id)
-    if len(related_podcasts) > 4:
-        related_podcasts = random.sample(related_podcasts, 4)
+    if len(related_podcasts) > 6:
+        related_podcasts = random.sample(related_podcasts, 6)
     else:
         random.shuffle(related_podcasts)
         

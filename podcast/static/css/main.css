@@ -274,10 +274,9 @@ nav a:hover {
 
 .details-body {
   font-family: Arial, sans-serif;
-  margin: 0;
-  margin-left: auto;
+  margin-left: 18%;
   padding: 0;
-  background-color: #f4f4f4;
+  background-color: #dcdada;
   transform: scale(0.8);  /* 将整体页面缩小到80% */
   transform-origin: top left; /* 缩放时从左上角开始 */
   width: 125%;/* 由于缩放，增加宽度以占满页面 */
@@ -285,9 +284,10 @@ nav a:hover {
 
 .details-container {
   width: 80%;
-  margin: 20px auto;
+  margin-left: 1%;
+  margin-top: 5px;
   background-color: #fff;
-  padding: 10px;
+  padding: 20px;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
@@ -298,11 +298,10 @@ nav a:hover {
   border-bottom: 2px solid #ddd;
 }
 
-.header {
+.section-header {
   display: flex;
   align-items: center;
   background-color: #555555;
-  width: 95%;
   padding: 30px;
   border-radius: 8px;
 }
@@ -320,12 +319,12 @@ nav a:hover {
 }
 
 .details-podcast-details h1 {
-  margin-left: 5px;
+  margin-left: 0;
   font-size: 32px;
 }
 
 .details-podcast-details p {
-  margin-left: 5px;
+  margin-left: 0;
   font-size: 18px;
 }
 
