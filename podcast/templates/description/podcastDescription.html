@@ -19,7 +19,7 @@
         <div class="details-container">
         <!-- Podcast Introduction Section -->
          
-            <div class="section-header">
+            <div class="header">
                 <div class="details-podcast-image">
                     <img src="{{ podcast._image }}" alt="Podcast Image" />
                 </div>
@@ -52,7 +52,7 @@
             {% endfor %}
 
             <!-- Pagination Controls -->
-            <div class="episode-pagination">
+            <div class="pagination">
                 {% if current_page > 1 %}
                 <a href="?page=1">First Page</a>
                 <a href="?page={{ current_page - 1 }}">Previous Page</a>

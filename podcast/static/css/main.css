@@ -11,7 +11,7 @@
 html,
 body {
   height: 100%;
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 
 nav {
@@ -249,17 +249,16 @@ nav a:hover {
 
 .details-body {
   font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
   background-color: #f4f4f4;
-  width: 90%;
-  transform: scale(0.8);  
-  transform-origin: top left; 
+  transform: scale(0.8);  /* 将整体页面缩小到80% */
+  transform-origin: top left; /* 缩放时从左上角开始 */
+  width: 125%;/* 由于缩放，增加宽度以占满页面 */
 }
-/* 将整体页面缩小到80% */
-/* 缩放时从左上角开始 */
-/* 由于缩放，增加宽度以占满页面 */
+
 .details-container {
-  width: 90%;
-  height: 90%;
+  width: 80%;
   margin: 20px auto;
   background-color: #fff;
   padding: 10px;
@@ -273,7 +272,7 @@ nav a:hover {
   border-bottom: 2px solid #ddd;
 }
 
-.section-header {
+.header {
   display: flex;
   align-items: center;
   background-color: #555555;
@@ -304,7 +303,7 @@ nav a:hover {
   font-size: 18px;
 }
 
-.section content {
+.section-content {
   display: flex;
   justify-content: space-between;
   align-items: stretch;
