@@ -19,14 +19,17 @@ def home():
     current_page = int(request.args.get('page', 1))
     all_podcasts = repository.get_all_podcasts()
 
+    # Sorting the podcast list by title
+    sorted_podcasts = sorted(all_podcasts, key=lambda podcast: podcast.title)
+
     podcasts_per_page = 6
-    total_podcasts = len(all_podcasts)
+    total_podcasts = len(sorted_podcasts)
     total_pages = math.ceil(total_podcasts / podcasts_per_page)
     
     start_index = (current_page - 1) * podcasts_per_page
     end_index = start_index + podcasts_per_page
 
-    podcasts_on_page = all_podcasts[start_index:end_index]
+    podcasts_on_page = sorted_podcasts[start_index:end_index]
 
     return render_template(
         'podcastLibrary/library.html', 
