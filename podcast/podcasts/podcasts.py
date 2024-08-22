@@ -4,6 +4,8 @@ import math
 from podcast.adapters.datareader.csvdatareader import CSVDataReader
 from podcast.adapters.interface_repository import MemoryPodcastRepository
 import random
+import datetime
+
 
 podcasts_blueprint = Blueprint('podcasts_bp', __name__)
 
@@ -52,6 +54,12 @@ def show_description(podcast_id):
         related_podcasts = random.sample(related_podcasts, 6)
     else:
         random.shuffle(related_podcasts)
+
+    # Sort epidsode by date
+    episodes = repository.get_all_episodes()
+    # if episodes is None:
+    #     return None
+    # episodes.sort(key=lambda date: datetime.strptime(date, "%Y-%m-%d %H:%M:%S%z"))
         
     # Determine current page and total pages for pagination (example logic)
     episodes_per_page = 5

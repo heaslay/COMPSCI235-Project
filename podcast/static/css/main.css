@@ -11,7 +11,7 @@
 html,
 body {
   height: 100%;
-  /* overflow: hidden; */
+  overflow: hidden;
 }
 
 nav {
@@ -277,13 +277,13 @@ nav a:hover {
   margin-left: 18%;
   padding: 0;
   background-color: #dcdada;
-  transform: scale(0.8);  /* 将整体页面缩小到80% */
-  transform-origin: top left; /* 缩放时从左上角开始 */
-  width: 125%;/* 由于缩放，增加宽度以占满页面 */
+  width: 100%;
+  overflow-y: auto;
+  height: auto;
 }
 
 .details-container {
-  width: 80%;
+  width: 81%;
   margin-left: 1%;
   margin-top: 5px;
   background-color: #fff;

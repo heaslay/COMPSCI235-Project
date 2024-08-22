@@ -1,4 +1,5 @@
 from __future__ import annotations
+import datetime
 
 
 def validate_non_negative_int(value):
@@ -322,8 +323,8 @@ class PodcastSubscription:
 
 
 class Episode:
-    def __init__(self, episode_id: int, belong: Podcast, title: str = "Untitled", audio: str = "", length: int = 0, description: str = "", date: str = ""):
-        validate_non_negative_int(episode_id)
+    def __init__(self, episode_id: int, belong: Podcast, title: str = "Untitled", audio: str = "", 
+                 length: int = 0, description: str = "", date: datetime = 0):
         validate_non_empty_string(title, "Episode title")
         validate_non_empty_string(audio, "Episode audio")
         validate_non_negative_int(length)
@@ -389,11 +390,11 @@ class Episode:
         self._description = new_description
 
     @property
-    def date(self) -> str:
+    def date(self) -> datetime:
         return self._date
     
     @date.setter
-    def date(self, new_date: str):
+    def date(self, new_date: datetime):
         validate_non_empty_string(new_date, "Episode published date")
         self._date = new_date
 
