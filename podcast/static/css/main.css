@@ -11,7 +11,7 @@
 html,
 body {
   height: 100%;
-  overflow: hidden;
+  overflow: auto;
 }
 
 nav {
@@ -100,11 +100,10 @@ nav a:hover {
   border: 1px solid #ccc;
   border-radius: 4px;
   overflow: hidden;
-  background-color: #fff;
+  background-color: #c1c1c1;
 }
 
 .search-input {
-  flex: 0.5;
   padding: 6px;
   border: none;
   outline: none;
@@ -192,10 +191,12 @@ nav a:hover {
   margin: 0 auto;
 }
 
+/* ====================================================== */
+/* pagination */
+
 .pagination {
   display: flex;
   justify-content: center;
-
 }
 
 .pagination a,
@@ -203,7 +204,7 @@ nav a:hover {
 .pagination input[type="number"],
 .pagination button {
   margin: 0 5px;
-  padding: 10px 15px;
+  padding: 5px 15px;
   color: #333;
   text-decoration: none;
   background-color: #f9f9f9;
@@ -221,16 +222,18 @@ nav a:hover {
   color: #999;
   pointer-events: none;
   background-color: #ddd;
-}
+} 
 
 .pagination input[type="number"] {
-  width: 60px;
+  width: 70px;
   text-align: center;
 }
 
 .pagination form {
   display: inline;
 }
+
+/* ===================================================== */
 
 .podcast-details .detail-row {
   display: flex;
@@ -273,26 +276,26 @@ nav a:hover {
 /* Podcast Description */
 
 .details-body {
-  font-family: Arial, sans-serif;
-  margin-left: 18%;
+  position: absolute;
+  right: 0;
   padding: 0;
   background-color: #dcdada;
   width: 100%;
-  overflow-y: auto;
-  height: auto;
 }
 
-.details-container {
+.podcast-container {
+  position: absolute;
+  right: 6px;
   width: 81%;
-  margin-left: 1%;
   margin-top: 5px;
+  margin-bottom: 5px;
   background-color: #fff;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
-#section {
+section {
   margin-bottom: 20px;
   padding-bottom: 20px;
   border-bottom: 2px solid #ddd;
@@ -449,31 +452,4 @@ nav a:hover {
 .change-batch {
   text-align: center;
   margin-top: 10px;
-}
-
-/* ================================================== */
-/* Episode pagination */
-.episode-pagination {
-  text-align: center;
-  margin-top: 20px;
-  flex-shrink: 0;
-  flex-basis: 100%;
-}
-
-.episode-pagination a {
-  display: inline-block;
-  margin: 0 5px;
-  text-decoration: none;
-  color: #333;
-  padding: 5px 8px;
-  border: 1px solid #000;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.episode-pagination input {
-  width: 50px;
-  text-align: center;
-  margin-left: 5px;
-  border: 1px solid #000;
 }

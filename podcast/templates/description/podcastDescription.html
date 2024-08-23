@@ -17,7 +17,7 @@
     </header>
 
     <div class="details-body">
-    <div class="details-container">
+    <div class="podcast-container">
       <!-- Podcast Introduction Section -->
       <div class="section-header">
         <div class="details-podcast-image">
@@ -25,9 +25,13 @@
         </div>
         <div class="details-podcast-details">
           <h1>{{ podcast.title }}</h1>
-          <p>{{ podcast.author }} | {{ podcast.categories }}</p>
+          <p>{{ podcast.author['name'] }}
+            {% for item in podcast.categories %} 
+              | {{ item['name'] }}
+              {% endfor %}
+          </p>
           <p>
-            Episodes: {{ podcast.episode_count }} | Language: {{
+            Episodes: {{ podcast.episode_count() }} | Language: {{
             podcast.language }}
           </p>
           <p>Description: {{ podcast.description }}</p>
@@ -42,9 +46,9 @@
           %}
           <div class="episode-item" onclick="playEpisode({{ episode.id }})">
             <div class="episode-title">
-              <span>{{ episode._title }}</span>
+              <span>{{ episode.title }}</span>
               <small class="episode-meta"
-                >Length: {{ episode._length }} | Date: {{ episode._date
+                >Length: {{ episode.length }} | Date: {{ episode.date
                 }}</small
               >
             </div>
@@ -53,7 +57,7 @@
           {% endfor %}
 
           <!-- Pagination Controls -->
-          <div class="episode-pagination">
+          <div class="pagination">
             {% if current_page > 1 %}
             <a href="?page=1">First Page</a>
             <a href="?page={{ current_page - 1 }}">Previous Page</a>
@@ -69,7 +73,7 @@
             {% endif %}
 
             <span
-              >Jump to
+              >Jump to page:
               <input
                 type="number"
                 value="{{ current_page }}"
@@ -100,7 +104,7 @@
           </div>
         </div>
       </div><!-- section content -->
-    </div>
+    </div> 
     </div> <!-- details body -->
 
     <script>

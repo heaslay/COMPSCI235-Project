@@ -9,6 +9,10 @@ class AbstractPodcastRepository(ABC):
     @abstractmethod
     def get_related_podcasts_by_id(self, podcast_id: int) -> List[Podcast]:
         pass
+    
+    @abstractmethod
+    #     def get_episode_list_of_podcast_id(self, podcast_id: int) -> List[Episode]:
+    #         pass
 
     @abstractmethod
     def get_podcast_by_id(self, podcast_id: int) -> Optional[Podcast]:
@@ -21,10 +25,12 @@ class AbstractPodcastRepository(ABC):
     @abstractmethod
     def get_episode_by_id(self, episode_id: int) -> Optional[Episode]:
         pass
-
+# 
     @abstractmethod
     def get_all_episodes(self) -> List[Episode]:
         pass
+
+    
 
     @abstractmethod
     def get_author_by_id(self, author_id: int) -> Optional[Author]:
@@ -83,6 +89,18 @@ class MemoryPodcastRepository(AbstractPodcastRepository):
         self._authors = csvdatareader.dataset_of_authors
         self._categories = csvdatareader.dataset_of_categories
 
+    # def get_sorted_episode(self, podcast_id: int) -> List[Episode]:
+    #     current_podcast = self.get_podcast_by_id(podcast_id)
+
+    #     pod_episodes = []
+    #     for episode in self._episodes:
+    #         if episode.podcast.id == podcast_id:
+    #             pod_episodes.append(episode)
+
+    #     return pod_episodes
+        
+
+
     def get_related_podcasts_by_id(self, podcast_id: int) -> List[Podcast]:
         current_podcast = self.get_podcast_by_id(podcast_id)
         if not current_podcast:
@@ -97,7 +115,6 @@ class MemoryPodcastRepository(AbstractPodcastRepository):
         return related_podcasts
 
 
-
     def get_podcast_by_id(self, podcast_id: int) -> Optional[Podcast]:
         for podcast in self._podcasts:
             if podcast.id == podcast_id:
@@ -106,7 +123,7 @@ class MemoryPodcastRepository(AbstractPodcastRepository):
 
     def get_all_podcasts(self) -> List[Podcast]:
         return self._podcasts
-
+        
     def get_episode_by_id(self, episode_id: int) -> Optional[Episode]:
         for episode in self._episodes:
             if episode.id == episode_id:
@@ -115,7 +132,7 @@ class MemoryPodcastRepository(AbstractPodcastRepository):
 
     def get_all_episodes(self) -> List[Episode]:
         return self._episodes
-
+    
     def get_author_by_id(self, author_id: int) -> Optional[Author]:
         for author in self._authors:
             if author.id == author_id:
