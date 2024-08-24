@@ -1,5 +1,6 @@
 from __future__ import annotations
-from datetime import datetime
+from datetime import datetime, date
+from typing import List, Iterable
 
 
 def validate_non_negative_int(value):
@@ -11,11 +12,6 @@ def validate_non_empty_string(value, field_name="value"):
     if not isinstance(value, str) or not value.strip():
         raise ValueError(f"{field_name} must be a non-empty string.")
 
-#convert time UTC to match time format
-def string_to_datetie(time ="time"):
-    if time.endswith('+00'):
-        time = time.replace('+00', '+0000')
-    return datetime.strptime(time, '%Y-%m-%d %H:%M:%S%z')
 
 class Author:
     def __init__(self, author_id: int, name: str):
@@ -23,7 +19,7 @@ class Author:
         validate_non_empty_string(name, "Author name")
         self._id = author_id
         self._name = name.strip()
-        self.podcast_list = []
+        self._podcast_list = []
 
     @property
     def id(self) -> int:
@@ -37,6 +33,11 @@ class Author:
     def name(self, new_name: str):
         validate_non_empty_string(new_name, "New name")
         self._name = new_name.strip()
+
+
+    @property
+    def podcasts_list(self) -> Iterable['Podcast']:
+        return self._podcast_list
 
     def add_podcast(self, podcast: Podcast):
         if not isinstance(podcast, Podcast):
@@ -78,8 +79,8 @@ class Podcast:
         self._language = language
         self._website = website
         self._itunes_id = itunes_id
-        self.categories = []
-        self.episodes = []
+        self._categories = []
+        self._episodes = []
 
     @property
     def id(self) -> int:
@@ -122,6 +123,7 @@ class Podcast:
             validate_non_empty_string(new_description, "Podcast description")
         self._description = new_description
 
+
     @property
     def language(self) -> str:
         return self._language
@@ -132,6 +134,7 @@ class Podcast:
             raise TypeError("Podcast language must be a string.")
         self._language = new_language
 
+
     @property
     def website(self) -> str:
         return self._website
@@ -141,34 +144,45 @@ class Podcast:
         validate_non_empty_string(new_website, "Podcast website")
         self._website = new_website
 
+
+    @property
+    def categories(self) -> List[Category]:
+        return self._categories
+
     def add_category(self, category: Category):
         if not isinstance(category, Category):
             raise TypeError("Expected a Category instance.")
-        if category not in self.categories:
-            self.categories.append(category)
+        if category not in self._categories:
+            self._categories.append(category)
 
     def remove_category(self, category: Category):
-        if category in self.categories:
-            self.categories.remove(category)
+        if category in self._categories:
+            self._categories.remove(category)
 
+
+    @property
+    def episodes(self) -> List['Episode']:
+        return self._episodes
+    
     def add_episode(self, episode: Episode):
         if not isinstance(episode, Episode):
             raise TypeError("Expected an Episode instance.")
-        if episode not in self.episodes:
-            self.episodes.append(episode)
+        if episode not in self._episodes:
+            self._episodes.append(episode)
 
     def remove_episode(self, episode: Episode):
-        if episode in self.episodes:
-            self.episodes.remove(episode)
+        if episode in self._episodes:
+            self._episodes.remove(episode)
 
     def episode_count(self) -> int:
         count = 0
-        for episode in self.episodes:
+        for episode in self._episodes:
             count += 1
         return count
     
-    def sort_episodes(self)
+
     
+       
     def __repr__(self):
         return f"<Podcast {self.id}: '{self.title}' by {self.author.name}>"
 
@@ -203,7 +217,7 @@ class Category:
 
     @name.setter
     def name(self, new_name: str):
-        validate_non_empty_string(new_name, "New name")
+        validate_non_empty_string(new_name, "New Categories")
         self._name = new_name.strip()
 
     def __repr__(self) -> str:
@@ -246,7 +260,7 @@ class User:
         return self._password
 
     @property
-    def subscription_list(self):
+    def subscription_list(self) -> List[PodcastSubscription]:
         return self._subscription_list
 
     def add_subscription(self, subscription: PodcastSubscription):
@@ -330,7 +344,7 @@ class PodcastSubscription:
 
 class Episode:
     def __init__(self, episode_id: int, podcast: Podcast, title: str = "Untitled", audio: str = "", 
-                 length: int = 0, description: str = "", date: str=""):
+                 length: int = 0, description: str = "", pub_date: datetime =0):
         validate_non_negative_int(episode_id)
         validate_non_empty_string(title, "Episode title")
         if not isinstance(podcast, Podcast):
@@ -339,9 +353,9 @@ class Episode:
         self._title = title.strip()
         self._audio = audio
         self._length = length
-        self.podcast = podcast
+        self._podcast = podcast
         self._description = description
-        self._date = string_to_datetie(date)
+        self._pub_date = pub_date
 
     @property
     def id(self) -> int:
@@ -349,13 +363,13 @@ class Episode:
 
     @property
     def podcast(self) -> Podcast:
-        return self.podcast
+        return self._podcast
     
     @podcast.setter
     def podcast(self, podcast: Podcast):
         if not isinstance(podcast, Podcast):
             raise TypeError("Podcast must be a Podcast object.")
-        self._pod = podcast
+        self._podcast = podcast
     
     @property
     def title(self) -> str:
@@ -396,16 +410,16 @@ class Episode:
         self._description = new_description
 
     @property
-    def date(self) -> datetime:
-        return self._date
+    def pub_date(self) -> datetime:
+        return self._pub_date
     
-    @date.setter
-    def date(self, new_date: str=""):
+    @pub_date.setter
+    def pub_date(self, new_date: datetime):
         validate_non_empty_string(new_date, "Episode published date")
-        self._date = string_to_datetie(new_date)
+        self._pub_date = new_date
 
     def __repr__(self) -> str:
-        return f"<Episode {self.id}: Belongs to {self.pod.title}>"
+        return f"<Episode {self.id}: Belongs to {self._podcast.title}>"
     
     def __eq__(self, other) -> bool:
         if not isinstance(other, Episode):

@@ -9,10 +9,6 @@ class AbstractPodcastRepository(ABC):
     @abstractmethod
     def get_related_podcasts_by_id(self, podcast_id: int) -> List[Podcast]:
         pass
-    
-    @abstractmethod
-    #     def get_episode_list_of_podcast_id(self, podcast_id: int) -> List[Episode]:
-    #         pass
 
     @abstractmethod
     def get_podcast_by_id(self, podcast_id: int) -> Optional[Podcast]:
@@ -25,12 +21,10 @@ class AbstractPodcastRepository(ABC):
     @abstractmethod
     def get_episode_by_id(self, episode_id: int) -> Optional[Episode]:
         pass
-# 
+
     @abstractmethod
     def get_all_episodes(self) -> List[Episode]:
         pass
-
-    
 
     @abstractmethod
     def get_author_by_id(self, author_id: int) -> Optional[Author]:
@@ -83,23 +77,12 @@ class AbstractPodcastRepository(ABC):
 
 class MemoryPodcastRepository(AbstractPodcastRepository):
 
+
     def __init__(self, csvdatareader):
         self._podcasts = csvdatareader.podcasts
         self._episodes = csvdatareader.episodes
         self._authors = csvdatareader.dataset_of_authors
         self._categories = csvdatareader.dataset_of_categories
-
-    # def get_sorted_episode(self, podcast_id: int) -> List[Episode]:
-    #     current_podcast = self.get_podcast_by_id(podcast_id)
-
-    #     pod_episodes = []
-    #     for episode in self._episodes:
-    #         if episode.podcast.id == podcast_id:
-    #             pod_episodes.append(episode)
-
-    #     return pod_episodes
-        
-
 
     def get_related_podcasts_by_id(self, podcast_id: int) -> List[Podcast]:
         current_podcast = self.get_podcast_by_id(podcast_id)

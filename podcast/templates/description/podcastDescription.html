@@ -1,22 +1,11 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
+{% extends 'layout.html' %}
+  {% block head %}
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Podcast Details</title>
-    <link
-      rel="stylesheet"
-      href="{{ url_for('static', filename='css/main.css') }}"
-    />
-  </head>
-  <body>
-    {% include 'navbar.html' %}
-    <header id="header">
-        {{ podcast.title }}
-        {% include 'copyright.html' %}
-    </header>
-
-    <div class="details-body">
+  {% endblock %}
+  {% block web %} {{ podcast.title }}{% endblock %}
+  {% block podbody %}
     <div class="podcast-container">
       <!-- Podcast Introduction Section -->
       <div class="section-header">
@@ -24,7 +13,6 @@
           <img src="{{ podcast._image }}" alt="Podcast Image" />
         </div>
         <div class="details-podcast-details">
-          <h1>{{ podcast.title }}</h1>
           <p>{{ podcast.author['name'] }}
             {% for item in podcast.categories %} 
               | {{ item['name'] }}
@@ -42,13 +30,13 @@
       <div class="section-content">
         <!-- Episode Selection Section -->
         <div class="episode-list">
-          {% for episode in podcast.episodes[(current_page-1)*5:current_page*5]
+          {% for episode in episodes[(current_page-1)*5:current_page*5]
           %}
-          <div class="episode-item" onclick="playEpisode({{ episode.id }})">
+          <div class="episode-item" onclick="playEpisode( episode.id )">
             <div class="episode-title">
               <span>{{ episode.title }}</span>
               <small class="episode-meta"
-                >Length: {{ episode.length }} | Date: {{ episode.date
+                >Length: {{ episode.length }} | Date: {{ episode.pub_date
                 }}</small
               >
             </div>
@@ -88,9 +76,9 @@
         <div class="related-podcasts">
           <div class="related-item-container">
             {% for related in related_podcasts %}
-            <a href="/podcast/{{ related.id }}" class="related-item">
+            
+            <a href="{{ url_for('podcasts_bp.show_description', podcast_id=related.id) }}" class="related-item">
               <img src="{{ related._image }}" alt="Related Podcast Image" />
-              <div>{{ related.name }}</div>
             </a>
             {% endfor %}
           </div>
@@ -105,10 +93,8 @@
         </div>
       </div><!-- section content -->
     </div> 
-    </div> <!-- details body -->
-
+    
     <script>
       function playEpisode(episodeNumber) {}
     </script>
-  </body>
-</html>
+  {% endblock %}
