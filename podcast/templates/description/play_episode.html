@@ -25,7 +25,7 @@
       </div>
     </div>
 
-    <!-- 播放部分 -->
+    <!-- play_audio -->
     <div class="episode-playback">
       <h2 class="episode-title">{{ episode.title }}</h2>
       <p class="episode-description">{{ episode._description | safe }}</p>
@@ -36,7 +36,7 @@
     </div>
   </div>
 
-  <!-- 返回按钮 -->
+  <!-- backbutton -->
   <div class="back-button">
     <a href="{{ url_for('podcasts_bp.show_description', podcast_id=podcast.id) }}" class="btn-back">← Back to Podcast</a>
   </div>

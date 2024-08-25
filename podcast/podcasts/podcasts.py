@@ -80,12 +80,9 @@ def show_description(podcast_id):
 
 @podcasts_blueprint.route('/change_batch/<int:podcast_id>', methods=['POST'])
 def change_batch(podcast_id):
-    # Logic to change the batch of related podcasts or any other action
-    # For simplicity, let's assume we're shuffling the related podcasts
     related_podcasts = services.get_related_podcasts_by_id(podcast_id, repository)
     random.shuffle(related_podcasts)
 
-    # Redirect back to the podcast description page
     return redirect(url_for('podcasts_bp.show_description', podcast_id=podcast_id))
 
 @podcasts_blueprint.route('/play/<int:episode_id>')
@@ -102,8 +99,8 @@ def play_episode(episode_id):
 @podcasts_blueprint.route('/search', methods=['GET'])
 def search():
     query = request.args.get('query', '').strip()
-    current_page = int(request.args.get('page', 1))  # 确保传递了 current_page
-    podcasts_per_page = 6  # 每页显示的播客数量
+    current_page = int(request.args.get('page', 1))
+    podcasts_per_page = 6
 
     if not query:
         return redirect(url_for('podcasts_bp.home'))
@@ -115,7 +112,7 @@ def search():
     ]
 
     total_results = len(search_results)
-    total_pages = (total_results + podcasts_per_page - 1) // podcasts_per_page  # 计算总页数
+    total_pages = (total_results + podcasts_per_page - 1) // podcasts_per_page
 
     start_index = (current_page - 1) * podcasts_per_page
     end_index = start_index + podcasts_per_page
