@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html leng="en"> 
+  <head>
+    {% block head %} {% endblock %}
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/main.css') }}"
+    />
+  </head>
+
+  <body>
+    {% include 'navbar.html' %}
+    <header id="header">
+      {% block web %}{% endblock %}
+      {% include 'copyright.html' %}
+  </header>
+      <div class="details-body">
+      {% block podbody %}{% endblock %}
+    </div>
+
+    <div class="content">
+      
+      <div class="intro">
+        {% block content %}{% endblock %}      
+      </div>
+
+      <div class="library-container">
+        {% block libContent %}{% endblock %}
+      </div>
+
+      <div class="pagination">
+        {% block libpagination %}{% endblock %}
+      </div>
+    </div>
+  </body>
+</html>

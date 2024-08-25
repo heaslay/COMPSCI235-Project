@@ -7,6 +7,10 @@ from podcast.adapters.datareader.csvdatareader import CSVDataReader
 class AbstractPodcastRepository(ABC):
 
     @abstractmethod
+    def get_related_podcasts_by_id(self, podcast_id: int) -> List[Podcast]:
+        pass
+
+    @abstractmethod
     def get_podcast_by_id(self, podcast_id: int) -> Optional[Podcast]:
         pass
 
@@ -73,11 +77,26 @@ class AbstractPodcastRepository(ABC):
 
 class MemoryPodcastRepository(AbstractPodcastRepository):
 
+
     def __init__(self, csvdatareader):
         self._podcasts = csvdatareader.podcasts
         self._episodes = csvdatareader.episodes
         self._authors = csvdatareader.dataset_of_authors
         self._categories = csvdatareader.dataset_of_categories
+
+    def get_related_podcasts_by_id(self, podcast_id: int) -> List[Podcast]:
+        current_podcast = self.get_podcast_by_id(podcast_id)
+        if not current_podcast:
+            return []
+
+        related_podcasts = []
+        for podcast in self._podcasts:
+            if podcast.id != podcast_id:
+                if not set(current_podcast.categories).isdisjoint(podcast.categories):
+                    related_podcasts.append(podcast)
+
+        return related_podcasts
+
 
     def get_podcast_by_id(self, podcast_id: int) -> Optional[Podcast]:
         for podcast in self._podcasts:
@@ -87,7 +106,7 @@ class MemoryPodcastRepository(AbstractPodcastRepository):
 
     def get_all_podcasts(self) -> List[Podcast]:
         return self._podcasts
-
+        
     def get_episode_by_id(self, episode_id: int) -> Optional[Episode]:
         for episode in self._episodes:
             if episode.id == episode_id:
@@ -96,7 +115,7 @@ class MemoryPodcastRepository(AbstractPodcastRepository):
 
     def get_all_episodes(self) -> List[Episode]:
         return self._episodes
-
+    
     def get_author_by_id(self, author_id: int) -> Optional[Author]:
         for author in self._authors:
             if author.id == author_id:

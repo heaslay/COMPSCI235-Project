@@ -1,4 +1,6 @@
 from __future__ import annotations
+from datetime import datetime, date
+from typing import List, Iterable
 
 
 def validate_non_negative_int(value):
@@ -17,7 +19,7 @@ class Author:
         validate_non_empty_string(name, "Author name")
         self._id = author_id
         self._name = name.strip()
-        self.podcast_list = []
+        self._podcast_list = []
 
     @property
     def id(self) -> int:
@@ -31,6 +33,11 @@ class Author:
     def name(self, new_name: str):
         validate_non_empty_string(new_name, "New name")
         self._name = new_name.strip()
+
+
+    @property
+    def podcasts_list(self) -> Iterable['Podcast']:
+        return self._podcast_list
 
     def add_podcast(self, podcast: Podcast):
         if not isinstance(podcast, Podcast):
@@ -72,8 +79,8 @@ class Podcast:
         self._language = language
         self._website = website
         self._itunes_id = itunes_id
-        self.categories = []
-        self.episodes = []
+        self._categories = []
+        self._episodes = []
 
     @property
     def id(self) -> int:
@@ -116,6 +123,7 @@ class Podcast:
             validate_non_empty_string(new_description, "Podcast description")
         self._description = new_description
 
+
     @property
     def language(self) -> str:
         return self._language
@@ -126,6 +134,7 @@ class Podcast:
             raise TypeError("Podcast language must be a string.")
         self._language = new_language
 
+
     @property
     def website(self) -> str:
         return self._website
@@ -135,35 +144,54 @@ class Podcast:
         validate_non_empty_string(new_website, "Podcast website")
         self._website = new_website
 
+
+    @property
+    def categories(self) -> List[Category]:
+        return self._categories
+
     def add_category(self, category: Category):
         if not isinstance(category, Category):
             raise TypeError("Expected a Category instance.")
-        if category not in self.categories:
-            self.categories.append(category)
+        if category not in self._categories:
+            self._categories.append(category)
 
     def remove_category(self, category: Category):
-        if category in self.categories:
-            self.categories.remove(category)
+        if category in self._categories:
+            self._categories.remove(category)
 
+
+    @property
+    def episodes(self) -> List['Episode']:
+        return self._episodes
+    
     def add_episode(self, episode: Episode):
         if not isinstance(episode, Episode):
             raise TypeError("Expected an Episode instance.")
-        if episode not in self.episodes:
-            self.episodes.append(episode)
+        if episode not in self._episodes:
+            self._episodes.append(episode)
 
     def remove_episode(self, episode: Episode):
-        if episode in self.episodes:
-            self.episodes.remove(episode)
+        if episode in self._episodes:
+            self._episodes.remove(episode)
 
+    def episode_count(self) -> int:
+        count = 0
+        for episode in self._episodes:
+            count += 1
+        return count
+    
+
+    
+       
     def __repr__(self):
         return f"<Podcast {self.id}: '{self.title}' by {self.author.name}>"
 
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool:
         if not isinstance(other, Podcast):
             return False
         return self.id == other.id
 
-    def __lt__(self, other):
+    def __lt__(self, other) -> bool:
         if not isinstance(other, Podcast):
             return False
         return self.title < other.title
@@ -189,18 +217,18 @@ class Category:
 
     @name.setter
     def name(self, new_name: str):
-        validate_non_empty_string(new_name, "New name")
+        validate_non_empty_string(new_name, "New Categories")
         self._name = new_name.strip()
 
     def __repr__(self) -> str:
         return f"<Category {self._id}: {self._name}>"
 
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool:
         if not isinstance(other, Category):
             return False
         return self.id == other.id
 
-    def __lt__(self, other):
+    def __lt__(self, other) -> bool:
         if not isinstance(other, Category):
             return False
         return self._name < other.name
@@ -232,7 +260,7 @@ class User:
         return self._password
 
     @property
-    def subscription_list(self):
+    def subscription_list(self) -> List[PodcastSubscription]:
         return self._subscription_list
 
     def add_subscription(self, subscription: PodcastSubscription):
@@ -248,12 +276,12 @@ class User:
     def __repr__(self):
         return f"<User {self.id}: {self.username}>"
 
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool:
         if not isinstance(other, User):
             return False
         return self.id == other.id
 
-    def __lt__(self, other):
+    def __lt__(self, other) -> bool:
         if not isinstance(other, User):
             return False
         return self.id < other.id
@@ -263,14 +291,14 @@ class User:
 
 
 class PodcastSubscription:
-    def __init__(self, sub_id: int, owner: User, podcast: Podcast):
+    def __init__(self, sub_id: int, user: User, podcast: Podcast):
         validate_non_negative_int(sub_id)
-        if not isinstance(owner, User):
-            raise TypeError("Owner must be a User object.")
+        if not isinstance(user, User):
+            raise TypeError("User must be a User object.")
         if not isinstance(podcast, Podcast):
             raise TypeError("Podcast must be a Podcast object.")
         self._id = sub_id
-        self._owner = owner
+        self._user = user
         self._podcast = podcast
 
     @property
@@ -278,14 +306,14 @@ class PodcastSubscription:
         return self._id
 
     @property
-    def owner(self) -> User:
-        return self._owner
+    def user(self) -> User:
+        return self._user
 
-    @owner.setter
-    def owner(self, new_owner: User):
-        if not isinstance(new_owner, User):
-            raise TypeError("Owner must be a User object.")
-        self._owner = new_owner
+    @user.setter
+    def user(self, new_user: User):
+        if not isinstance(new_user, User):
+            raise TypeError("user must be a User object.")
+        self._user = new_user
 
     @property
     def podcast(self) -> Podcast:
@@ -298,51 +326,50 @@ class PodcastSubscription:
         self._podcast = new_podcast
 
     def __repr__(self):
-        return f"<PodcastSubscription {self.id}: Owned by {self.owner.username}>"
+        return f"<PodcastSubscription {self.id}: Owned by {self.user.username}>"
 
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool:
         if not isinstance(other, PodcastSubscription):
             return False
-        return self.id == other.id and self.owner == other.owner and self.podcast == other.podcast
+        return self.id == other.id and self.user == other.user and self.podcast == other.podcast
 
-    def __lt__(self, other):
+    def __lt__(self, other) -> bool:
         if not isinstance(other, PodcastSubscription):
             return False
         return self.id < other.id
 
     def __hash__(self):
-        return hash((self.id, self.owner, self.podcast))
+        return hash(self.id)
 
 
 class Episode:
-    def __init__(self, episode_id: int, belong: Podcast, title: str = "Untitled", audio: str = "", length: int = 0, description: str = "", date: str = ""):
+    def __init__(self, episode_id: int, podcast: Podcast, title: str = "Untitled", audio: str = "", 
+                 length: int = 0, description: str = "", pub_date: datetime =0):
         validate_non_negative_int(episode_id)
         validate_non_empty_string(title, "Episode title")
-        validate_non_empty_string(audio, "Episode audio")
-        validate_non_negative_int(length)
-        if not isinstance(belong, Podcast):
+        if not isinstance(podcast, Podcast):
             raise TypeError("Podcast must be a Podcast object.")
         self._id = episode_id
-        self._belong = belong
         self._title = title.strip()
         self._audio = audio
         self._length = length
+        self._podcast = podcast
         self._description = description
-        self._date = date
+        self._pub_date = pub_date
 
     @property
     def id(self) -> int:
         return self._id
-    
+
     @property
-    def belong(self) -> Podcast:
-        return self._belong
+    def podcast(self) -> Podcast:
+        return self._podcast
     
-    @belong.setter
-    def belong(self, new_belong: Podcast):
-        if not isinstance(new_belong, Podcast):
+    @podcast.setter
+    def podcast(self, podcast: Podcast):
+        if not isinstance(podcast, Podcast):
             raise TypeError("Podcast must be a Podcast object.")
-        self._belong = new_belong
+        self._podcast = podcast
     
     @property
     def title(self) -> str:
@@ -359,7 +386,8 @@ class Episode:
     
     @audio.setter
     def audio(self, new_audio: str):
-        validate_non_empty_string(new_audio, "Episode audio")
+        if new_audio is not None and not isinstance(new_audio, str):
+            raise TypeError("Episode audio must be a string or None")
         self._audio = new_audio
     
     @property
@@ -382,42 +410,42 @@ class Episode:
         self._description = new_description
 
     @property
-    def date(self) -> str:
-        return self._date
+    def pub_date(self) -> datetime:
+        return self._pub_date
     
-    @date.setter
-    def date(self, new_date: str):
+    @pub_date.setter
+    def pub_date(self, new_date: datetime):
         validate_non_empty_string(new_date, "Episode published date")
-        self._date = new_date
+        self._pub_date = new_date
 
     def __repr__(self) -> str:
-        return f"<Episode {self.id}: Belongs to {self.belong.title}>"
+        return f"<Episode {self.id}: Belongs to {self._podcast.title}>"
     
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool:
         if not isinstance(other, Episode):
             return False
         return self.id == other.id
     
-    def __lt__(self, other):
+    def __lt__(self, other) -> bool:
         if not isinstance(other, Episode):
             return False
         return self.id < other.id
     
     def __hash__(self):
-        return hash((self.id, self.belong))
+        return hash((self.id, self.title))
 
 
 class Review:
-    def __init__(self, review_id: int, came: Podcast or Episode, writer: User, rating: int, content: str = ""):
+    def __init__(self, review_id: int, came: Podcast or Episode, user: User, rating: int, content: str = ""):
         validate_non_negative_int(review_id)
         validate_non_negative_int(rating)
         if not isinstance(came, (Podcast, Episode)):
             raise TypeError("Review must be from Podcast or Episode object.")
-        if not isinstance(writer, User):
-            raise TypeError("Writer must be a User object.")
+        if not isinstance(user, User):
+            raise TypeError("user must be a User object.")
         self._id = review_id
         self._came = came
-        self._writer = writer
+        self._user = user
         self._rating = rating
         self._content = content
 
@@ -430,8 +458,8 @@ class Review:
         return self._came
         
     @property
-    def writer(self) -> User:
-        return self._writer
+    def user(self) -> User:
+        return self._user
     
     @property
     def rating(self) -> int:
@@ -452,30 +480,30 @@ class Review:
         self._content = new_content
 
     def __repr__(self) -> str:
-        return f"<Review {self.id}>: Wrote from {self.writer.username}>"
+        return f"<Review {self.id}>: Wrote from {self.user.username}>"
     
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool:
         if not isinstance(other, Review):
             return False
-        return self.id == other.id and self.writer == other.writer
+        return self.id == other.id and self.user == other.user
     
-    def __lt__(self, other):
+    def __lt__(self, other) -> bool:
         if not isinstance(other, Review):
             return False
         return self.id < other.id
     
     def __hash__(self):
-        return hash((self.id, self.writer))
+        return hash((self.id, self.rating))
 
 
 class Playlist:
-    def __init__(self, playlist_id: int, owner: User, title: str = "Untitle"):
+    def __init__(self, playlist_id: int, user: User, title: str = "Untitle"):
         validate_non_negative_int(playlist_id)
         validate_non_empty_string(title, "Playlist's title")
-        if not isinstance(owner, User):
-            raise TypeError("Owner must be a User object.")
+        if not isinstance(user, User):
+            raise TypeError("user must be a User object.")
         self._id = playlist_id
-        self._owner = owner
+        self._user = user
         self._title = title.strip()
 
     @property
@@ -483,14 +511,14 @@ class Playlist:
         return self._id
     
     @property
-    def owner(self) -> User:
-        return self._owner
+    def user(self) -> User:
+        return self._user
     
-    @owner.setter
-    def owner(self, new_owner: User):
-        if not isinstance(new_owner, User):
-            raise TypeError("Owner must be a User object.")
-        self._owner = new_owner
+    @user.setter
+    def user(self, new_user: User):
+        if not isinstance(new_user, User):
+            raise TypeError("user must be a User object.")
+        self._user = new_user
 
     @property
     def title(self) -> str:
@@ -502,14 +530,14 @@ class Playlist:
         self._title = new_title
 
     def __repr__(self) -> str:
-        return f"<Playlist {self.id}: Owns by {self.owner.username}>"
+        return f"<Playlist {self.id}: Owns by {self.user.username}>"
     
-    def __eq__(self, other):
+    def __eq__(self, other) -> bool:
         if not isinstance(other, Playlist):
             return False
         return self.id == other.id
     
-    def __lt__(self, other):
+    def __lt__(self, other) -> bool:
         if not isinstance(other, Playlist):
             return False
         return self.id < other.id

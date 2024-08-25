@@ -1,7 +1,7 @@
 import pytest
 from podcast.domainmodel.model import Author, Podcast, Category, User, PodcastSubscription, Episode, Review, Playlist
 from podcast.adapters.datareader.csvdatareader import CSVDataReader
-
+from datetime import datetime
 
 def test_author_initialization():
     author1 = Author(1, "Brian Denny")
@@ -309,7 +309,7 @@ def test_user_add_remove_favourite_podcasts(my_user, my_subscription):
 
 def test_podcast_subscription_initialization(my_subscription):
     assert my_subscription.id == 1
-    assert repr(my_subscription.owner) == "<User 1: shyamli>"
+    assert repr(my_subscription.user) == "<User 1: shyamli>"
     assert repr(my_subscription.podcast) == "<Podcast 100: 'Joe Toste Podcast - Sales Training Expert' by Joe Toste>"
 
     assert repr(my_subscription) == "<PodcastSubscription 1: Owned by shyamli>"
@@ -317,11 +317,11 @@ def test_podcast_subscription_initialization(my_subscription):
 
 def test_podcast_subscription_set_owner(my_subscription):
     new_user = User(2, "asma", "pw67890")
-    my_subscription.owner = new_user
-    assert my_subscription.owner == new_user
+    my_subscription.user = new_user
+    assert my_subscription.user == new_user
 
     with pytest.raises(TypeError):
-        my_subscription.owner = "not a user"
+        my_subscription.user = "not a user"
 
 
 def test_podcast_subscription_set_podcast(my_subscription):
@@ -353,12 +353,12 @@ def test_podcast_subscription_hash(my_user, my_podcast):
 def test_episode_initialization(my_podcast):
     episode = Episode(1, my_podcast, "Episode 1", "audio.mp3", 300, "Description", "2024-08-05")
     assert episode.id == 1
-    assert episode.belong == my_podcast
+    assert episode.podcast == my_podcast
     assert episode.title == "Episode 1"
     assert episode.audio == "audio.mp3"
     assert episode.length == 300
     assert episode.description == "Description"
-    assert episode.date == "2024-08-05"
+    assert episode.pub_date == "2024-08-05"
     assert repr(episode) == "<Episode 1: Belongs to Joe Toste Podcast - Sales Training Expert>"
 
     with pytest.raises(ValueError):
@@ -382,8 +382,8 @@ def test_episode_setters(my_podcast):
     episode.description = "New Description"
     assert episode.description == "New Description"
 
-    episode.date = "2024-08-06"
-    assert episode.date == "2024-08-06"
+    episode.pub_date = "2024-08-06"
+    assert episode.pub_date == "2024-08-06"
 
     with pytest.raises(ValueError):
         episode.title = ""
@@ -392,14 +392,14 @@ def test_episode_setters(my_podcast):
         episode.audio = ""
 
     with pytest.raises(ValueError):
-        episode.date = ""
+        episode.pub_date = ""
 
 
 def test_review_initialization(my_podcast, my_user):
     review = Review(1, my_podcast, my_user, 5, "Great episode!")
     assert review.id == 1
     assert review.came == my_podcast
-    assert review.writer == my_user
+    assert review.user == my_user
     assert review.rating == 5
     assert review.content == "Great episode!"
     assert repr(review) == "<Review 1>: Wrote from shyamli>"
@@ -432,7 +432,7 @@ def test_review_setters(my_podcast, my_user):
 def test_playlist_initialization(my_user):
     playlist = Playlist(1, my_user, "My Playlist")
     assert playlist.id == 1
-    assert playlist.owner == my_user
+    assert playlist.user == my_user
     assert playlist.title == "My Playlist"
     assert repr(playlist) == "<Playlist 1: Owns by shyamli>"
 
@@ -449,14 +449,14 @@ def test_playlist_setters(my_user):
     assert playlist.title == "New Playlist"
 
     new_user = User(2, "asma", "pw67890")
-    playlist.owner = new_user
-    assert playlist.owner == new_user
+    playlist.user = new_user
+    assert playlist.user == new_user
 
     with pytest.raises(ValueError):
         playlist.title = ""
 
     with pytest.raises(TypeError):
-        playlist.owner = "not a user"
+        playlist.user = "not a user"
 
 def test_csv_data_reader():
 
@@ -482,8 +482,8 @@ def test_csv_data_reader():
     # Validate the first episode
     episode = reader.episodes[0]
     assert isinstance(episode, Episode), "First item in episodes is not an Episode object."
-    assert isinstance(episode.belong, Podcast), "Episode's podcast is not a Podcast object."
-    assert episode.belong in reader.podcasts, "Episode's podcast is not in the podcasts list."
+    assert isinstance(episode.podcast, Podcast), "Episode's podcast is not a Podcast object."
+    assert episode.podcast in reader.podcasts, "Episode's podcast is not in the podcasts list."
 
     # Test empty strings for author and audio link are handled
     assert episode.title != "", "Episode title should not be empty."

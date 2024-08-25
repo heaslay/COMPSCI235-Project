@@ -17,6 +17,8 @@ def memory_repository():
     return repository
 
 
+
+
 @pytest.fixture
 def test_data():
     base_id = 10000
@@ -110,6 +112,8 @@ def test_get_all_categories(memory_repository, test_data):
     print("First 5 Categories:", list(all_categories)[:5])
     assert category in all_categories
 
+def test_get_related_podcasts_by_id(memory_repository):
+    print(memory_repository.get_related_podcasts_by_id(1))
 
 if __name__ == "__main__":
     pytest.main()
