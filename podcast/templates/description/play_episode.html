@@ -1,0 +1,43 @@
+{% extends 'layout.html' %}
+{% block head %}
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>{{ episode.title }}</title>
+{% endblock %}
+{% block web %} {{ podcast.title }}{% endblock %}
+{% block podbody %}
+  <div class="podcast-container">
+    <!-- Podcast Introduction Section -->
+    <div class="section-header">
+      <div class="details-podcast-image">
+        <img src="{{ podcast._image }}" alt="Podcast Image" />
+      </div>
+      <div class="details-podcast-details">
+        <p>{{ podcast.author['name'] }}
+          {% for item in podcast.categories %}
+            | {{ item['name'] }}
+          {% endfor %}
+        </p>
+        <p>
+          Episodes: {{ podcast.episode_count() }} | Language: {{ podcast.language }}
+        </p>
+        <p>Description: {{ podcast.description }}</p>
+      </div>
+    </div>
+
+    <!-- 播放部分 -->
+    <div class="episode-playback">
+      <h2 class="episode-title">{{ episode.title }}</h2>
+      <p class="episode-description">{{ episode._description | safe }}</p>
+      <audio controls class="audio-player">
+        <source src="{{ episode._audio }}" type="audio/mpeg">
+        Your browser does not support the audio element.
+      </audio>
+    </div>
+  </div>
+
+  <!-- 返回按钮 -->
+  <div class="back-button">
+    <a href="{{ url_for('podcasts_bp.show_description', podcast_id=podcast.id) }}" class="btn-back">← Back to Podcast</a>
+  </div>
+{% endblock %}

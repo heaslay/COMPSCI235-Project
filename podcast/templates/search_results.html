@@ -1,0 +1,47 @@
+{% extends 'layout.html' %}
+  {% block head %}
+    <title>Search Results</title>
+  {% endblock %}
+
+  {% block web %}Search Results{% endblock %}
+
+  {% block libContent %}
+    <h2>Results for "{{ query }}"</h2>
+    {% if podcasts %}
+      <ul class="podcast-list">
+        {% for podcast in podcasts %}
+        <li>
+          <a href="{{ url_for('podcasts_bp.show_description', podcast_id=podcast.id) }}">
+            <img src="{{ podcast.image }}" alt="Podcast Logo" />
+            <span>{{ podcast.title }}</span>
+          </a>
+        </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No podcasts found for your search.</p>
+    {% endif %}
+  {% endblock %}
+
+  {% block libpagination %}
+    <!-- Pagination Controls -->
+    {% if current_page > 1 %}
+    <a href="{{ url_for('podcasts_bp.search', query=query, page=1) }}">First</a>
+    <a href="{{ url_for('podcasts_bp.search', query=query, page=current_page - 1) }}">Previous</a>
+    {% endif %}
+
+    <span>Page {{ current_page }} of {{ total_pages }}</span>
+
+    {% if current_page < total_pages %}
+    <a href="{{ url_for('podcasts_bp.search', query=query, page=current_page + 1) }}">Next</a>
+    <a href="{{ url_for('podcasts_bp.search', query=query, page=total_pages) }}">Last</a>
+    {% endif %}
+
+    <!-- Jump to Page Form -->
+    <form action="{{ url_for('podcasts_bp.search', query=query) }}" method="get">
+      <input type="hidden" name="query" value="{{ query }}">
+      <label for="page">Jump to page:</label>
+      <input type="number" id="page" name="page" min="1" max="{{ total_pages }}" value="{{ current_page }}">
+      <button type="submit">Go</button>
+    </form>
+  {% endblock %}

@@ -88,9 +88,43 @@ def change_batch(podcast_id):
     # Redirect back to the podcast description page
     return redirect(url_for('podcasts_bp.show_description', podcast_id=podcast_id))
 
-@podcasts_blueprint.route('/episode/<int:episode_id>')
+@podcasts_blueprint.route('/play/<int:episode_id>')
 def play_episode(episode_id):
     episode = services.get_episode_by_id(episode_id, repository)
-    if episode is None:
-        return "Episode not found", 404
-    return render_template('episode.html', episode=episode)
+    if not episode:
+        return redirect(url_for('podcasts_bp.show_description'))
+
+    podcast = episode.podcast
+
+    return render_template('description/play_episode.html', episode=episode, podcast=podcast)
+
+
+@podcasts_blueprint.route('/search', methods=['GET'])
+def search():
+    query = request.args.get('query', '').strip()
+    current_page = int(request.args.get('page', 1))  # 确保传递了 current_page
+    podcasts_per_page = 6  # 每页显示的播客数量
+
+    if not query:
+        return redirect(url_for('podcasts_bp.home'))
+
+    all_podcasts = services.get_all_podcasts(repository)
+    search_results = [
+        podcast for podcast in all_podcasts
+        if query.lower() in podcast.title.lower() or query.lower() in podcast.description.lower()
+    ]
+
+    total_results = len(search_results)
+    total_pages = (total_results + podcasts_per_page - 1) // podcasts_per_page  # 计算总页数
+
+    start_index = (current_page - 1) * podcasts_per_page
+    end_index = start_index + podcasts_per_page
+    paginated_results = search_results[start_index:end_index]
+
+    return render_template(
+        'search_results.html',
+        query=query,
+        podcasts=paginated_results,
+        current_page=current_page,
+        total_pages=total_pages
+    )
