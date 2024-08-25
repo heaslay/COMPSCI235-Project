@@ -56,19 +56,16 @@ def show_description(podcast_id):
     else:
         random.shuffle(related_podcasts)
 
-    # Sort episodes by publish date
     sorted_episodes = sorted(podcast.episodes, key=lambda epi: epi.pub_date) 
 
-    # Determine current page and total pages for pagination (example logic)
+    # Determine current page and total pages for pagination
     episodes_per_page = 5    
     current_page = int(request.args.get('page', 1))
 
     total_pages = math.ceil(len(sorted_episodes) / episodes_per_page )
-    
-    # Slice the episodes list based on the current page
+
     displayed_episodes = sorted_episodes
 
-    # Pass the podcast, displayed episodes, related podcasts, and pagination data to the template
     return render_template(
         'description/podcastDescription.html',
         podcast=podcast,
